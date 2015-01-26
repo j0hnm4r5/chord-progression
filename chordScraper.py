@@ -1,6 +1,15 @@
 import requests
 import simplejson
+from bs4 import BeautifulSoup
 import jsonpickle
+
+def find_chords(r):
+	soup = BeautifulSoup(r.text, 'lxml')
+	chords = []
+	for chord in soup.find(class_="print-visible").next_sibling.next_sibling.find_all("span"):
+		chords.append(chord.text)
+
+	return chords
 
 with open('top100s.json', 'r') as f:
 	data = simplejson.load(f)
@@ -11,8 +20,11 @@ for song in data['songs']:
 
 	if r.status_code == 200:
 		song['chord_url'] = url
+		song['chords'] = find_chords(r)
 	else:
 		song['chord_url'] = ""
+		song['chords'] = ""
+
 
 jsonpickle.set_encoder_options('simplejson', indent=4)
 frozen = jsonpickle.encode(data)
