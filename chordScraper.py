@@ -17,7 +17,7 @@ def find_chords(r):
 with open('top100s.json', 'r') as f:
 	data = simplejson.load(f)
 
-for song in data['songs']:
+for song in data['songs'][0:10]:
 	try:
 		url = "http://tabs.ultimate-guitar.com/%s/%s/%s_crd.htm" % (song['artist'][0].lower(), song['artist'].replace(" ", "_"), song['title'].replace(" ", "_"))
 		r = requests.get(url)
@@ -29,11 +29,12 @@ for song in data['songs']:
 			song['chord_url'] = ""
 			song['chords'] = ""
 	except:
+		print
 		song['chord_url'] = ""
 		song['chords'] = ""
 
 jsonpickle.set_encoder_options('simplejson', indent=4)
 frozen = jsonpickle.encode(data)
 
-with open('top100s.json', 'w') as f:
+with open('top100s_test.json', 'w') as f:
 	f.write(frozen)
