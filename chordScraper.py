@@ -23,12 +23,14 @@ for song in data['songs']:
 		r = requests.get(url)
 
 		if r.status_code == 200:
+			print url
 			song['chord_url'] = url
 			song['chords'] = find_chords(r)
 		else:
 			song['chord_url'] = ""
 			song['chords'] = ""
 	except:
+		print "There was a problem"
 		song['chord_url'] = ""
 		song['chords'] = ""
 
